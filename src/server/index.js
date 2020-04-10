@@ -2,6 +2,12 @@ var path = require("path");
 const express = require("express");
 const mockAPIResponse = require("./mockAPI.js");
 
+var AYLIENTextAPI = require("aylien_textapi");
+var textapi = new AYLIENTextAPI({
+  application_id: "2cde9ead",
+  application_key: "1404bb62f2a70203aeec19aec6f890dd",
+});
+
 const app = express();
 
 app.use(express.static("dist"));
@@ -21,3 +27,14 @@ app.listen(8081, function () {
 app.get("/test", function (req, res) {
   res.send(mockAPIResponse);
 });
+
+textapi.sentiment(
+  {
+    text: "John is a very good football player!",
+  },
+  function (error, response) {
+    if (error === null) {
+      console.log(response);
+    }
+  }
+);
