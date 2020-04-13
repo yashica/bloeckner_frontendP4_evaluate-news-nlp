@@ -15,37 +15,46 @@ const mockAPIResponse = require("./mockAPI.js");
 var AYLIENTextAPI = require("aylien_textapi");
 
 // set aylien API credentials
-var textapi = new AYLIENTextAPI({
+var textApi = new AYLIENTextAPI({
   application_id: process.env.API_ID,
   application_key: process.env.API_KEY,
 });
 
 /* Start up an instance of app */
 const app = express();
+const distPath = path.join(__dirname, "..//..//dist");
 
 /* Middleware*/
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-/* Initialize the main project folder*/
+/* Setup the server to look for assets in the dist folder */
+//app.use(express.static(distPath));
 app.use(express.static("dist"));
-console.log(__dirname);
+
+/* home route uses index file from dist folder */
+app.get("/", function (req, res) {
+  res.sendFile("dist/index.html");
+  //res.sendFile(path.resolve(distPath, "index.html"));
+});
+
+//console.log(__dirname);
 
 /* Spin up the server*/
 // designates what port the app will listen to for incoming requests
-app.listen(8081, function () {
-  console.log("Example app listening on port 8081!");
+app.listen(3000, function () {
+  console.log("Example app listening on port 3000!");
 });
 
 console.log("TEST TEST TEST");
 
 /* routes */
 //basic get request route - returns our index.html
-app.get("/", function (req, res) {
+/* app.get("/", function (req, res) {
   // res.sendFile('dist/index.html')
   res.sendFile(path.resolve("src/client/views/index.html"));
-});
+}); */
 
 app.get("/test", function (req, res) {
   res.send(mockAPIResponse);
@@ -53,9 +62,11 @@ app.get("/test", function (req, res) {
 
 //post request: call aylien to do nlp test for news article at given url
 app.post("/infoURL", function (req, res) {
-  console.log(req.body);
+  console.log("TEST: In server.js app.post");
+  console.log("In server.js app.post: req.body = " + req.body);
   const reqURL = req.body.url;
   console.log(reqURL);
+
   if (textApi) {
     //call aylien for nlp processing of url input
     textApi.sentiment(
@@ -83,7 +94,7 @@ app.post("/infoURL", function (req, res) {
 });
 
 //aylien test
-textapi.sentiment(
+textApi.sentiment(
   {
     text: "John is a very good football player!",
   },
