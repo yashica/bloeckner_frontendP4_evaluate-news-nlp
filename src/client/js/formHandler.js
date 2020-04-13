@@ -1,3 +1,5 @@
+import { checkForUrl } from "./urlChecker";
+
 function handleSubmit(event) {
   event.preventDefault();
 
