@@ -30,24 +30,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 /* Setup the server to look for assets in the dist folder */
-//app.use(express.static(distPath));
 app.use(express.static("dist"));
 
 /* home route uses index file from dist folder */
 app.get("/", function (req, res) {
   res.sendFile("dist/index.html");
-  //res.sendFile(path.resolve(distPath, "index.html"));
 });
-
-//console.log(__dirname);
 
 /* Spin up the server*/
 // designates what port the app will listen to for incoming requests
 app.listen(3000, function () {
   console.log("Example app listening on port 3000!");
 });
-
-console.log("TEST TEST TEST");
 
 /* routes */
 //basic get request route - returns our index.html
@@ -61,8 +55,8 @@ app.get("/test", function (req, res) {
 });
 
 //post request: call aylien to do nlp test for news article at given url
-app.post("/infoURL", function (req, res) {
-  console.log("TEST: In server.js app.post");
+app.post("/nlp", function (req, res) {
+  //console.log("TEST: In server.js app.post");
   console.log("In server.js app.post: req.body = " + req.body);
   const reqURL = req.body.url;
   console.log(reqURL);
@@ -94,7 +88,7 @@ app.post("/infoURL", function (req, res) {
 });
 
 //aylien test
-textApi.sentiment(
+/* textApi.sentiment(
   {
     text: "John is a very good football player!",
   },
@@ -103,4 +97,4 @@ textApi.sentiment(
       console.log(response);
     }
   }
-);
+); */

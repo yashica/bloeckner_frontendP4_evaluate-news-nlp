@@ -3,11 +3,9 @@
 async function handleSubmit(event) {
   event.preventDefault();
 
-  console.log("In formHandler.js: Button Click!!");
-
   //check what text was put into the url input form field
-  const inputUrl = document.getElementById("name").value;
-  //get access to the result y
+  const inputUrl = document.getElementById("urlinput").value;
+  //get access to the results field
   const resultUI = document.getElementById("results");
 
   //check, if the url in the input field is a valid url
@@ -16,7 +14,7 @@ async function handleSubmit(event) {
     resultUI.textContent = "Not a valid url.";
     return;
   } else {
-    resultUI.textContent = "Url was valid.";
+    resultUI.textContent = "Requesting...";
   }
 
   //data object for the url
@@ -26,22 +24,11 @@ async function handleSubmit(event) {
 
   //send a post request to our server
   //to call aylien to do a nlp processing for the input url
-  const res = await postData("/infoURL", urlData);
+  const res = await postData("/nlp", urlData);
 
   //display the answer in the result field of the UI
-  resultUI.textContent = `The polarity is ${res.pol} and 
-  polarity confidence is ${res.con}`;
-
-  // check what text was put into the form field
-  /*   let formText = document.getElementById("name").value;
-  Client.checkForName(formText);
-
-  console.log("::: Form Submitted :::");
-  fetch("http://localhost:8080/test")
-    .then((res) => res.json())
-    .then(function (res) {
-      document.getElementById("results").innerHTML = res.message;
-    }); */
+  resultUI.textContent = `The polarity of the article is ${res.pol}.
+  Polarity confidence is ${res.con}`;
 }
 
 //send a post request to our server
