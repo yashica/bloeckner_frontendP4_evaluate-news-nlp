@@ -1,11 +1,17 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 var path = require("path");
 const express = require("express");
 const mockAPIResponse = require("./mockAPI.js");
 
+//Require the Aylien npm package
 var AYLIENTextAPI = require("aylien_textapi");
+
+// set aylien API credentials
 var textapi = new AYLIENTextAPI({
-  application_id: "2cde9ead",
-  application_key: "1404bb62f2a70203aeec19aec6f890dd",
+  application_id: process.env.API_ID, //"2cde9ead", //`${process.env.application_id}`,
+  application_key: process.env.API_KEY, //"1404bb62f2a70203aeec19aec6f890dd", //`${process.env.application_key}`,
 });
 
 const app = express();
@@ -27,6 +33,8 @@ app.listen(8081, function () {
 app.get("/test", function (req, res) {
   res.send(mockAPIResponse);
 });
+
+console.log("TEST TEST TEST");
 
 textapi.sentiment(
   {
