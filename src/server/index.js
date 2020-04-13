@@ -16,17 +16,17 @@ var AYLIENTextAPI = require("aylien_textapi");
 
 // set aylien API credentials
 var textapi = new AYLIENTextAPI({
-  application_id: process.env.API_ID, //"2cde9ead", //`${process.env.application_id}`,
-  application_key: process.env.API_KEY, //"1404bb62f2a70203aeec19aec6f890dd", //`${process.env.application_key}`,
+  application_id: process.env.API_ID,
+  application_key: process.env.API_KEY,
 });
 
 /* Start up an instance of app */
 const app = express();
 
 /* Middleware*/
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
 
 /* Initialize the main project folder*/
 app.use(express.static("dist"));
@@ -41,6 +41,7 @@ app.listen(8081, function () {
 console.log("TEST TEST TEST");
 
 /* routes */
+//basic get request route - returns our index.html
 app.get("/", function (req, res) {
   // res.sendFile('dist/index.html')
   res.sendFile(path.resolve("src/client/views/index.html"));
@@ -48,6 +49,37 @@ app.get("/", function (req, res) {
 
 app.get("/test", function (req, res) {
   res.send(mockAPIResponse);
+});
+
+//post request: call aylien to do nlp test for news article at given url
+app.post("/infoURL", function (req, res) {
+  console.log(req.body);
+  const reqURL = req.body.url;
+  console.log(reqURL);
+  if (textApi) {
+    //call aylien for nlp processing of url input
+    textApi.sentiment(
+      {
+        //url of news article for aylien nlp request
+        url: reqURL,
+      },
+      (error, response) => {
+        if (error === null) {
+          //the response from aylien
+          console.log(response);
+          res.json({
+            pol: response.polarity,
+            con: response.polarity_confidence,
+          });
+        } else {
+          //in case of error
+          res.json({
+            message: error,
+          });
+        }
+      }
+    );
+  }
 });
 
 //aylien test
