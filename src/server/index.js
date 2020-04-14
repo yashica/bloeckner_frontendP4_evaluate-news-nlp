@@ -56,7 +56,7 @@ app.get("/test", function (req, res) {
 
 //post request: call aylien to do nlp test for news article at given url
 app.post("/nlp", function (req, res) {
-  //console.log("TEST: In server.js app.post");
+  console.log("TEST: In server.js app.post");
   console.log("In server.js app.post: req.body = " + req.body);
   const reqURL = req.body.url;
   console.log(reqURL);
